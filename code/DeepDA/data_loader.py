@@ -1,5 +1,25 @@
 from torchvision import datasets, transforms
 import torch
+from collections import defaultdict
+class LimitedImageFolder(datasets.ImageFolder):
+    def __init__(self, root, transform=None, target_transform=None, max_images_per_class=50):
+        super(LimitedImageFolder, self).__init__(root, transform=transform, target_transform=target_transform)
+        
+        # 각 클래스별로 최대 이미지 수 제한
+        self.samples = self._limit_samples(self.samples, max_images_per_class)
+        self.targets = [s[1] for s in self.samples]
+    
+    def _limit_samples(self, samples, max_images_per_class):
+        class_count = defaultdict(int)
+        limited_samples = []
+        
+        for sample in samples:
+            path, class_idx = sample
+            if class_count[class_idx] < max_images_per_class:
+                limited_samples.append(sample)
+                class_count[class_idx] += 1
+        
+        return limited_samples
 
 def load_data(data_folder, batch_size, train, num_workers=0, **kwargs):
     transform = {
@@ -16,6 +36,8 @@ def load_data(data_folder, batch_size, train, num_workers=0, **kwargs):
                 transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                   std=[0.229, 0.224, 0.225])])
     }
+
+   # data = LimitedImageFolder(root=data_folder, transform=transform['train' if train else 'test'], max_images_per_class=10)
     data = datasets.ImageFolder(root=data_folder, transform=transform['train' if train else 'test'])
     data_loader = get_data_loader(data, batch_size=batch_size, 
                                 shuffle=True if train else False, 

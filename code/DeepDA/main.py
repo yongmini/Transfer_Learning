@@ -138,7 +138,7 @@ def train(source_loader, target_train_loader, target_test_loader, model, optimiz
             
             clf_loss, transfer_loss = model(data_source, data_target, label_source)
             loss = clf_loss + args.transfer_loss_weight * transfer_loss
-            
+   
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

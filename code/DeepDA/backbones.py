@@ -59,7 +59,7 @@ class AlexNetBackbone(nn.Module):
 class ResNetBackbone(nn.Module):
     def __init__(self, network_type):
         super(ResNetBackbone, self).__init__()
-        resnet = resnet_dict[network_type](pretrained=True)
+        resnet = resnet_dict[network_type](weights=None)
         self.conv1 = resnet.conv1
         self.bn1 = resnet.bn1
         self.relu = resnet.relu

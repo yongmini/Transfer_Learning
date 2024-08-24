@@ -1,0 +1,14 @@
+.idea/
+*~
+*/*~
+code/.DS_Store
+.DS_Store
+*.pyc
+*.pkl
+*.log
+*.csv
+outputs/
+__pycache__/
+OfficeHome/
+SEM_DA/
+SEM_processing.ipynb
